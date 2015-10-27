@@ -5,6 +5,7 @@
 - hosts: dev_myriad_master
   remote_user: root
   roles:
+    - common
     - hadoop
 
 - hosts: dev_myriad_master
@@ -13,6 +14,7 @@
   roles:
     - mesos
     - myriad
+#start services
 
 - hosts: dev_myriad_slave
   remote_user: hduser
@@ -20,9 +22,9 @@
   roles:
     - mesos
     - myriad
+#start services
 
 - hosts: dev_server_master
   remote_user: hduser
   sudo: yes
-    - myriad_build
-#    - start_service
+#restart services

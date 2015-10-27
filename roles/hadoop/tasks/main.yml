@@ -1,25 +1,6 @@
 ---
 - name: Install Hadoop
 
-- name: update cache
-  apt: update_cache=yes
-
-- name: Install openssh-server
-  apt: name=openssh-server state=present
-
-- name: creating group hadoop
-  group: name=hadoop state=present 
-  sudo: yes
-
-- name: Add hduser to hadoop,sudo and generate_ssh_key
-  user: name=hduser shell=/bin/bash groups=hadoop,sudo generate_ssh_key=yes ssh_key_file=.ssh/id_rsa
-  sudo: yes
-
-- name: authorize the key
-  shell: cat /home/hduser/.ssh/id_rsa.pub >> /home/hduser/.ssh/authorized_keys
-  sudo_user: hduser
-
-
 - name: Download hadoop tar
   get_url:
     url= {{ HADOOP_INSTALL_URL }}
