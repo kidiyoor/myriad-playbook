@@ -1,7 +1,10 @@
 ---
 # Which version of Mesos to install
 MESOS_VERSION: 0.25.0
+# Which version of Hadoop to install
 HADOOP_VERSION: 2.5.0
 
 HADOOP_INSTALL_URL: http://apache.osuosl.org/hadoop/common/hadoop-{{ HADOOP_VERSION }}/hadoop-{{ HADOOP_VERSION }}.tar.gz
 MESOS_INSTALL_URL: http://www.apache.org/dist/mesos/0.25.0/mesos-{{ MESOS_VERSION }}.tar.gz
+
+#MYRIAD_MASTER: IP set this dynamically

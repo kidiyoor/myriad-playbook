@@ -1,2 +1,5 @@
-[dev-myriad]
+[dev_myriad_master]
 host1	
+
+[dev_myriad_slave]
+host2

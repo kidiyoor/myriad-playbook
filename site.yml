@@ -1,16 +1,28 @@
 ---
 - name: SETTING UP DEV_MYRIAD
-  hosts: dev-myriad
-  remote_user: root
 
+
+- hosts: dev_myriad_master
+  remote_user: root
   roles:
     - hadoop
 
-- hosts: dev-server
+- hosts: dev_myriad_master
   remote_user: hduser
   sudo: yes
-
   roles:
     - mesos
     - myriad
-#    - start-service
+
+- hosts: dev_myriad_slave
+  remote_user: hduser
+  sudo: yes
+  roles:
+    - mesos
+    - myriad
+
+- hosts: dev_server_master
+  remote_user: hduser
+  sudo: yes
+    - myriad_build
+#    - start_service

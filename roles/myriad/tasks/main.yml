@@ -1,0 +1,17 @@
+---
+- name: Install Myriad
+
+- name: update cache
+  apt: update_cache=yes
+
+- name: Installing Myriad dependencies  
+  apt: name={{ item }} state=present
+  with_items:
+   - libcurl3
+   - aria2
+
+- name: Git clone repo mesos/myriad phase1 branch
+  git: repo=git://github.com/mesos/myriad.git dest=/usr/hduser/ clone=yes update=no
+
+- name: Change the config file myriad-config-default.yml
+
