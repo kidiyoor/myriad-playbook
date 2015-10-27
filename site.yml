@@ -20,13 +20,8 @@
   sudo: yes
   tasks:
     - include: tasks/build.yml
-# transfer binary to slaves
-
-- hosts: dev_myriad_master
-  remote_user: hduser
-  sudo: yes
-  tasks:
     - include: tasks/start-master.yml
+# transfer binary to slaves
 
 - hosts: dev_myriad_slave
   remote_user: hduser
