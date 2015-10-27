@@ -2,29 +2,34 @@
 - name: SETTING UP DEV_MYRIAD
 
 
-- hosts: dev_myriad_master
+- hosts: all
   remote_user: root
   roles:
     - common
     - hadoop
+    - mesos    
 
 - hosts: dev_myriad_master
   remote_user: hduser
   sudo: yes
   roles:
-    - mesos
     - myriad
-#start services
+
+- hosts: dev_myriad_master
+  remote_user: hduser
+  sudo: yes
+  tasks:
+    - include: tasks/build.yml
+# transfer binary to slaves
+
+- hosts: dev_myriad_master
+  remote_user: hduser
+  sudo: yes
+  tasks:
+    - include: tasks/start-master.yml
 
 - hosts: dev_myriad_slave
   remote_user: hduser
   sudo: yes
-  roles:
-    - mesos
-    - myriad
-#start services
-
-- hosts: dev_server_master
-  remote_user: hduser
-  sudo: yes
-#restart services
+  tasks:
+    - include: tasks/start-slave.yml
