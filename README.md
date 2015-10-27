@@ -1,6 +1,9 @@
 # myriad-playbook
-Ansible Playbook for setting up myriad development environment
+Ansible Playbook for setting up Myriad development environment
+- Mesos
+- Hadoop
+- Myriad
 
-ansible version >= 1.9
+Require ansible version >= 1.9
 
-under progress
+in progress
