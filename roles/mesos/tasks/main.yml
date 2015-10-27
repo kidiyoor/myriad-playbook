@@ -1,0 +1,65 @@
+---
+- name: Install Mesos
+
+- name: add repo
+  apt_repository: repo='ppa:webupd8team/java' state=present
+
+- name: update cache
+  apt: update_cache=yes
+
+
+- name: Installing Java  
+  apt: name={{ item }} state=present
+  with_items:
+   - oracle-java8-installer
+   - oracle-java8-set-default
+
+- name: Installing Mesos dependencies
+  shell: sudo apt-get install -y autoconf libtool
+
+- name: Installing Mesos dependencies  
+  apt: name={{ item }} state=present
+  with_items:
+   - build-essential 
+   - python-dev 
+   - python-boto 
+   - libcurl4-nss-dev 
+   - libsasl2-dev 
+   - maven 
+   - libapr1-dev 
+   - libsvn-dev
+   
+- name: Java default
+  shell: echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+
+- name: Download mesos tar
+  get_url:
+    url: {{ MESOS_INSTALL_URL }}
+#    dest="/home/{{ deploy_user }}/"
+
+- name: Unarchive Mesos
+  unarchive:
+    src: "mesos-{{ MESOS_VERSION }}.tar.gz"
+    copy: no
+#    dest="/home/{{ deploy_user }}/app/"
+
+- name: Create directory build
+  shell: mkdir build
+  args:
+    chdir: mesos-0.25.0
+
+- name: Run configure to create make file
+  shell: ../configure >> configure-output.txt
+  args:
+    chdir: mesos-0.25.0/build
+
+
+- name: make
+  shell: make >> make-output.txt
+  args:
+    chdir: mesos-0.25.0/build
+
+- name: Run test suite
+  shell: make check >> make-check-output.txt
+  args:
+    chdir: mesos-0.25.0/build
