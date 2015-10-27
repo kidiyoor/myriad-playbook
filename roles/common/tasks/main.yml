@@ -1,6 +1,18 @@
 ---
 - name: Provisioning common dependencies
 
+- name: add repo
+  apt_repository: repo='ppa:ubuntu-toolchain-r/test' state=present
+
+- name: add repo
+  apt_repository: repo='ppa:webupd8team/java' state=present
+
+- name: Installing Java  
+  apt: name={{ item }} state=present
+  with_items:
+   - oracle-java8-installer
+   - oracle-java8-set-default
+
 - name: update cache
   apt: update_cache=yes
 
@@ -11,7 +23,7 @@
   group: name=hadoop state=present 
   sudo: yes
 
-- name: Add hduser to hadoop,sudo and generate_ssh_key
+- name: Add hduser to hadoop, sudo and generate_ssh_key
   user: name=hduser shell=/bin/bash groups=hadoop,sudo generate_ssh_key=yes ssh_key_file=.ssh/id_rsa
   sudo: yes
 
@@ -19,3 +31,26 @@
   shell: cat /home/hduser/.ssh/id_rsa.pub >> /home/hduser/.ssh/authorized_keys
   sudo_user: hduser
 
+- name: uninstall alternatives gcc
+  shell: sudo update-alternatives --remove-all gcc
+
+- name: uninstall alternatives g++
+  shell: sudo update-alternatives --remove-all g++
+
+- name: Insall gcc-4.8
+  apt: name=gcc state=present
+
+- name: Install g++-4.8
+  apt: name=g++ state=present
+
+- name: update-alternatives --install gcc
+  shell: sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
+
+- name: update-alternatives --install g++
+  shell: sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
+
+- name: update-alternatives gcc
+  shell: sudo update-alternatives --config gcc
+
+- name: update-alternatives g++
+  shell: sudo update-alternatives --config g++

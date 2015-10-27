@@ -1,19 +1,6 @@
 ---
 - name: Install Mesos
 
-- name: add repo
-  apt_repository: repo='ppa:webupd8team/java' state=present
-
-- name: update cache
-  apt: update_cache=yes
-
-
-- name: Installing Java  
-  apt: name={{ item }} state=present
-  with_items:
-   - oracle-java8-installer
-   - oracle-java8-set-default
-
 - name: Installing Mesos dependencies
   shell: sudo apt-get install -y autoconf libtool
 
