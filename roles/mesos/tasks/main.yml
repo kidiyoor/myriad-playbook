@@ -19,28 +19,26 @@
 - name: Download mesos tar
   get_url:
     url: '{{ MESOS_INSTALL_URL }}'
-    dest: "/home/{{ DEPLOY_USER }}/"
+    dest: "/home/{{ DEPLOY_USER }}/{{ MESOS_VERSION }}.tar.gz"
 
 - name: Exract Mesos
-  shell: tar -zxf mesos-0.25.0.tar.gz
+  shell: cd /home/hduser && tar -zxf {{ MESOS_VERSION}}.tar.gz
 
 - name: Create directory build
-  shell: mkdir build
-  args:
-    chdir: mesos-0.25.0
+  file: path=/home/hduser/mesos-{{ MESOS_VERSION }}/build state=directory mode=0755
 
 - name: Run configure to create make file
   shell: ../configure >> configure-output.txt
   args:
-    chdir: mesos-0.25.0/build
+    chdir: ../../home/hduser/mesos-{{ MESOS_VERSION }}/build
 
 
-- name: make
-  shell: make >> make-output.txt
-  args:
-    chdir: mesos-0.25.0/build
+#- name: make
+#  shell: make >> make-output.txt
+#  args:
+#    chdir: ../../home/hduser/mesos-{{ MESOS_VERSION}}/build
 
-- name: Run test suite
-  shell: make check >> make-check-output.txt
-  args:
-    chdir: mesos-0.25.0/build
+#- name: Run test suite
+#  shell: make check >> make-check-output.txt
+#  args:
+#    chdir: ../../home/hduser/mesos-{{ MESOS_VERSION}}/build

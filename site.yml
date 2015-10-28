@@ -4,18 +4,23 @@
   remote_user: ubuntu
   sudo: yes
   roles:
-    - common
-    - hadoop
-    - mesos  
+#    - common
   vars:
     password: $6$rounds=656000$fetzqhl8dHmp.510$kSk/rSrh43A3I/FLXMeOXxCyqjEkLyVM1vdGom7Ofc7GDBWEjZbTbKhsE/2wG/6fLF5BFupU30Ckg.6m1SYHZ1
 
-
+- hosts: all
+#This should be {{ DEPLOY_USER }} error due to SSH
+  remote_user: ubuntu
+  sudo: yes
+  roles:
+#    - hadoop
+    - mesos    
+  
 - hosts: dev_myriad_master
   remote_user: '{{ DEPLOY_USER }}'
   sudo: yes
   roles:
-    - myriad
+#    - myriad
 
 - hosts: dev_myriad_master
   remote_user: '{{ DEPLOY_USER }}'
