@@ -1,142 +1,123 @@
 ---
-- name: Install Hadoop
 
-- name: Download hadoop tar
-  get_url:
-    url= {{ HADOOP_INSTALL_URL }}
-    #dest="/home/{{ deploy_user }}/"
+#- name: configure Download hadoop tar
+#  get_url:
+#    url={{ HADOOP_INSTALL_URL }}
+#    dest="/home/{{ DEPLOY_USER }}/"
 
-- name: Unarchive Hadoop
-  unarchive:
-    src= hadoop-{{ HADOOP_VERSION }}.tar.gz
-    copy= yes
-    dest= /usr/local
+- name: Extract Hadoop
+  shell: sudo tar vxzf /home/{{ DEPLOY_USER }}/hadoop-{{ HADOOP_VERSION }}.tar.gz -C /usr/local
 
-
-
-
-
-- name: 
-  shell: sudo mv hadoop-${HADOOP_VERSION} hadoop
+- name: Move hadoop
+  shell: sudo mv hadoop-{{ HADOOP_VERSION }} hadoop
   args:
-    chdir= /usr/local
+    chdir: /usr/local
+    creates: hadoop/README.txt
 
-- name: 
-  shell: sudo chown -R hduser:hadoop hadoop
+- name: chown 
+  shell: sudo chown -R {{ DEPLOY_USER }}:hadoop hadoop
   args:
-    chdir= /usr/local
+    chdir: /usr/local
+
+- name: configure 
+  shell: sudo sh -c 'echo export JAVA_HOME=/usr/lib/jvm/java-8-oracle >> /home/{{ DEPLOY_USER }}/.bashrc'
+  args:
+    chdir: /usr/local
+
+- name: configure 
+  shell: sudo sh -c 'echo export HADOOP_INSTALL=/usr/local/hadoop >> /home/{{ DEPLOY_USER }}/.bashrc'
+  args:
+    chdir: /usr/local
+
+- name: configure 
+  shell: sudo sh -c 'echo export PATH=\$PATH:\$HADOOP_INSTALL/bin >> /home/{{ DEPLOY_USER }}/.bashrc'
+  args:
+    chdir: /usr/local
+
+- name: configure 
+  shell: sudo sh -c 'echo export PATH=\$PATH:\$HADOOP_INSTALL/sbin >> /home/{{ DEPLOY_USER }}/.bashrc'
+  args:
+    chdir: /usr/local
+
+- name: configure 
+  shell: sudo sh -c 'echo export HADOOP_MAPRED_HOME=\$HADOOP_INSTALL >> /home/{{ DEPLOY_USER }}/.bashrc'
+  args:
+    chdir: /usr/local
+
+- name: configure 
+  shell: sudo sh -c 'echo export HADOOP_COMMON_HOME=\$HADOOP_INSTALL >> /home/{{ DEPLOY_USER }}/.bashrc'
+  args:
+    chdir: /usr/local
+
+- name: configure 
+  shell: sudo sh -c 'echo export HADOOP_HDFS_HOME=\$HADOOP_INSTALL >> /home/{{ DEPLOY_USER }}/.bashrc'
+  args:
+    chdir: /usr/local
+
+- name: configure 
+  shell: sudo sh -c 'echo export YARN_HOME=\$HADOOP_INSTALL >> /home/{{ DEPLOY_USER }}/.bashrc'
+  args:
+    chdir: /usr/local
+
+- name: configure 
+  shell: sudo sh -c 'echo export HADOOP_COMMON_LIB_NATIVE_DIR=\$\{HADOOP_INSTALL\}/lib/native >> /home/{{ DEPLOY_USER }}/.bashrc'
+  args:
+    chdir: /usr/local
     
-- name: 
-  shell: sudo sh -c 'echo export JAVA_HOME=/usr/lib/jvm/java-8-oracle >> /home/hduser/.bashrc'
+- name: configure 
+  shell: sudo sh -c 'echo export HADOOP_OPTS=\"-Djava.library.path=\$HADOOP_INSTALL/lib\" >> /home/{{ DEPLOY_USER }}/.bashrc'
   args:
-    chdir= /usr/local
-
-- name: 
-  shell: sudo sh -c 'echo export HADOOP_INSTALL=/usr/local/hadoop >> /home/hduser/.bashrc'
-  args:
-    chdir= /usr/local
-
-- name: 
-  shell: sudo sh -c 'echo export PATH=\$PATH:\$HADOOP_INSTALL/bin >> /home/hduser/.bashrc'
-  args:
-    chdir= /usr/local
-
-- name: 
-  shell: sudo sh -c 'echo export PATH=\$PATH:\$HADOOP_INSTALL/sbin >> /home/hduser/.bashrc'
-  args:
-    chdir= /usr/local
-
-- name: 
-  shell: sudo sh -c 'echo export HADOOP_MAPRED_HOME=\$HADOOP_INSTALL >> /home/hduser/.bashrc'
-  args:
-    chdir= /usr/local
-
-- name: 
-  shell: sudo sh -c 'echo export HADOOP_COMMON_HOME=\$HADOOP_INSTALL >> /home/hduser/.bashrc'
-  args:
-    chdir= /usr/local
-
-- name: 
-  shell: sudo sh -c 'echo export HADOOP_HDFS_HOME=\$HADOOP_INSTALL >> /home/hduser/.bashrc'
-  args:
-    chdir= /usr/local
-
-- name: 
-  shell: sudo sh -c 'echo export YARN_HOME=\$HADOOP_INSTALL >> /home/hduser/.bashrc'
-  args:
-    chdir= /usr/local
-
-- name: 
-  shell: sudo sh -c 'echo export HADOOP_COMMON_LIB_NATIVE_DIR=\$\{HADOOP_INSTALL\}/lib/native >> /home/hduser/.bashrc'
-  args:
-    chdir= /usr/local
+    chdir: /usr/local
     
-- name: 
-  shell: sudo sh -c 'echo export HADOOP_OPTS=\"-Djava.library.path=\$HADOOP_INSTALL/lib\" >> /home/hduser/.bashrc'
-  args:
-    chdir= /usr/local
+#- name: configure Modify JAVA_HOME in hadoop-env
+#  shell: sudo -u {{ DEPLOY_USER }} sed -i.bak s=\${JAVA_HOME}=/usr/lib/jvm/java-8-oracle/=g hadoop-env.sh
+#  args:
+#    chdir: /usr/local/hadoop/etc/hadoop
     
+#- name: configure Hadoop version, test command 
+#  shell: sudo -u {{ DEPLOY_USER }} /usr/local/hadoop/bin/hadoop version 
+#  args:
+#    chdir: /usr/local/hadoop/etc/hadoop
 
-
-
-
-- name: Modify JAVA_HOME in hadoop-env
-  shell: sudo -u hduser sed -i.bak s=\${JAVA_HOME}=/usr/lib/jvm/java-8-oracle/=g hadoop-env.sh
+- name: configure 
+  shell: sudo -u {{ DEPLOY_USER }} sed -i.bak 's=<configuration>=<configuration>\<property>\<name>fs\.default\.name\</name>\<value>hdfs://localhost:9000\</value>\</property>=g' core-site.xml
   args:
-    chdir= /usr/local/hadoop/etc/hadoop
-    
-- name: Hadoop version, test command 
-  shell: /usr/local/hadoop/bin/hadoop version >> hadoop-test-output.txt
+    chdir: /usr/local/hadoop/etc/hadoop
+
+- name: configure 
+  shell: sudo -u {{ DEPLOY_USER }} sed -i.bak 's=<configuration>=<configuration>\<property>\<name>yarn\.nodemanager\.aux-services</name>\<value>mapreduce_shuffle</value>\</property>\<property>\<name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>\<value>org\.apache\.hadoop\.mapred\.ShuffleHandler</value>\</property>=g' yarn-site.xml
   args:
-    chdir= /usr/local/hadoop/etc/hadoop
+    chdir: /usr/local/hadoop/etc/hadoop
 
-- name: 
-  shell: sudo -u hduser sed -i.bak 's=<configuration>=<configuration>\<property>\<name>fs\.default\.name\</name>\<value>hdfs://localhost:9000\</value>\</property>=g' core-site.xml
+- name: configure 
+  shell: sudo -u {{ DEPLOY_USER }} cp mapred-site.xml.template mapred-site.xml
   args:
-    chdir= /usr/local/hadoop/etc/hadoop
+    chdir: /usr/local/hadoop/etc/hadoop
 
-- name: 
-  shell: sudo -u hduser sed -i.bak 's=<configuration>=<configuration>\<property>\<name>yarn\.nodemanager\.aux-services</name>\<value>mapreduce_shuffle</value>\</property>\<property>\<name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>\<value>org\.apache\.hadoop\.mapred\.ShuffleHandler</value>\</property>=g' yarn-site.xml
+- name: configure 
+  shell: sudo -u {{ DEPLOY_USER }} sed -i.bak 's=<configuration>=<configuration>\<property>\<name>mapreduce\.framework\.name</name>\<value>yarn</value>\</property>=g' mapred-site.xml
   args:
-    chdir= /usr/local/hadoop/etc/hadoop
+    chdir: /usr/local/hadoop/etc/hadoop
 
-- name: 
-  shell: sudo -u hduser cp mapred-site.xml.template mapred-site.xml
+- name: configure 
+  shell: sudo -u {{ DEPLOY_USER }} sh -c 'mkdir -p mydata/hdfs/namenode'
   args:
-    chdir= /usr/local/hadoop/etc/hadoop
+    chdir: /home/{{ DEPLOY_USER }}
 
-- name: 
-  shell: sudo -u hduser sed -i.bak 's=<configuration>=<configuration>\<property>\<name>mapreduce\.framework\.name</name>\<value>yarn</value>\</property>=g' mapred-site.xml
+- name: configure 
+  shell: sudo -u {{ DEPLOY_USER }} sh -c 'mkdir -p mydata/hdfs/datanode'
   args:
-    chdir= /usr/local/hadoop/etc/hadoop
+    chdir: /home/{{ DEPLOY_USER }}
 
-
-
-
-
-- name: 
-  shell: sudo -u hduser sh -c 'mkdir -p mydata/hdfs/namenode'
+- name: configure 
+  shell: sudo chown -R {{ DEPLOY_USER }}:hadoop /home/{{ DEPLOY_USER }}/mydata
   args:
-    chdir= /usr/hduser
+    chdir: /home/{{ DEPLOY_USER }}
 
-- name: 
-  shell: sudo -u hduser sh -c 'mkdir -p mydata/hdfs/datanode'
+- name: configure 
+  shell: sudo -u {{ DEPLOY_USER }} sed -i.bak 's=<configuration>=<configuration>\<property>\<name>dfs\.replication</name>\<value>1\</value>\</property>\<property>\<name>dfs\.namenode\.name\.dir</name>\<value>file:/home/{{ DEPLOY_USER }}/mydata/hdfs/namenode</value>\</property>\<property>\<name>dfs\.datanode\.data\.dir</name>\<value>file:/home/{{ DEPLOY_USER }}/mydata/hdfs/datanode</value>\</property>=g' hdfs-site.xml
   args:
-    chdir= /usr/hduser
+    chdir: /usr/local/hadoop/etc/hadoop
 
-- name: 
-  shell: sudo chown -R hduser:hadoop /home/hduser/mydata
-  args:
-    chdir= /usr/hduser
-
-
-
-
-
-- name: 
-  shell: sudo -u hduser sed -i.bak 's=<configuration>=<configuration>\<property>\<name>dfs\.replication</name>\<value>1\</value>\</property>\<property>\<name>dfs\.namenode\.name\.dir</name>\<value>file:/home/hduser/mydata/hdfs/namenode</value>\</property>\<property>\<name>dfs\.datanode\.data\.dir</name>\<value>file:/home/hduser/mydata/hdfs/datanode</value>\</property>=g' hdfs-site.xml
-  args:
-    chdir= /usr/local/hadoop/etc/hadoop
-
-- name: 
-  shell: sudo -u hduser sh -c '/usr/local/hadoop/bin/hdfs namenode -format' >> namenode-format-output.txt
+#- name: configure 
+#  shell: sudo -u {{ DEPLOY_USER }} sh -c '/usr/local/hadoop/bin/hdfs namenode -format' 

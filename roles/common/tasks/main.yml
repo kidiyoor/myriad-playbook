@@ -1,5 +1,4 @@
 ---
-- name: Provisioning common dependencies
 
 - name: add repo
   apt_repository: repo='ppa:ubuntu-toolchain-r/test' state=present
@@ -7,29 +6,34 @@
 - name: add repo
   apt_repository: repo='ppa:webupd8team/java' state=present
 
+- name: Java default
+  shell: echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+
+- name: update cache
+  apt: update_cache=yes
+
 - name: Installing Java  
   apt: name={{ item }} state=present
   with_items:
    - oracle-java8-installer
    - oracle-java8-set-default
 
-- name: update cache
-  apt: update_cache=yes
-
 - name: Install openssh-server
   apt: name=openssh-server state=present
 
 - name: uninstall alternatives gcc
   shell: sudo update-alternatives --remove-all gcc
+  ignore_errors: yes
 
 - name: uninstall alternatives g++
   shell: sudo update-alternatives --remove-all g++
+  ignore_errors: yes
 
 - name: Insall gcc-4.8
-  apt: name=gcc state=present
+  apt: name=gcc-4.8 state=present
 
 - name: Install g++-4.8
-  apt: name=g++ state=present
+  apt: name=g++-4.8 state=present
 
 - name: update-alternatives --install gcc
   shell: sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
@@ -47,10 +51,10 @@
   group: name=hadoop state=present 
   sudo: yes
 
-- name: Add hduser to hadoop, sudo and generate_ssh_key
-  user: name=hduser shell=/bin/bash groups=hadoop,sudo generate_ssh_key=yes ssh_key_file=.ssh/id_rsa
+- name: Add DEPLOY_USER to hadoop, sudo and generate_ssh_key
+  user: name='{{ DEPLOY_USER }}' shell=/bin/bash groups=hadoop,sudo generate_ssh_key=yes ssh_key_file=.ssh/id_rsa password={{ password }}
   sudo: yes
 
 - name: authorize the key
-  shell: cat /home/hduser/.ssh/id_rsa.pub >> /home/hduser/.ssh/authorized_keys
-  sudo_user: hduser
+  shell: cat /home/{{ DEPLOY_USER }}/.ssh/id_rsa.pub >> /home/{{ DEPLOY_USER }}/.ssh/authorized_keys
+  sudo_user: '{{ DEPLOY_USER }}'

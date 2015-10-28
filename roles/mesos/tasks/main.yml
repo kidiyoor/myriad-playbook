@@ -1,5 +1,4 @@
 ---
-- name: Install Mesos
 
 - name: Installing Mesos dependencies
   shell: sudo apt-get install -y autoconf libtool
@@ -16,37 +15,32 @@
    - libapr1-dev 
    - libsvn-dev
 
-- name: Java default
-  shell: echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
 
 - name: Download mesos tar
   get_url:
-    url= {{ MESOS_INSTALL_URL }}
-#    dest="/home/{{ deploy_user }}/"
+    url: '{{ MESOS_INSTALL_URL }}'
+    dest: "/home/{{ DEPLOY_USER }}/"
 
-- name: Unarchive Mesos
-  unarchive:
-    src= mesos-{{ MESOS_VERSION }}.tar.gz
-    copy= no
-#    dest="/home/{{ deploy_user }}/app/"
+- name: Exract Mesos
+  shell: tar -zxf mesos-0.25.0.tar.gz
 
 - name: Create directory build
   shell: mkdir build
   args:
-    chdir= mesos-0.25.0
+    chdir: mesos-0.25.0
 
 - name: Run configure to create make file
   shell: ../configure >> configure-output.txt
   args:
-    chdir= mesos-0.25.0/build
+    chdir: mesos-0.25.0/build
 
 
 - name: make
   shell: make >> make-output.txt
   args:
-    chdir= mesos-0.25.0/build
+    chdir: mesos-0.25.0/build
 
 - name: Run test suite
   shell: make check >> make-check-output.txt
   args:
-    chdir= mesos-0.25.0/build
+    chdir: mesos-0.25.0/build

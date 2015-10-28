@@ -1,30 +1,32 @@
+#SETTING UP DEV_MYRIAD
 ---
-- name: SETTING UP DEV_MYRIAD
-
-
 - hosts: all
-  remote_user: root
+  remote_user: ubuntu
+  sudo: yes
   roles:
     - common
     - hadoop
-    - mesos    
+    - mesos  
+  vars:
+    password: $6$rounds=656000$fetzqhl8dHmp.510$kSk/rSrh43A3I/FLXMeOXxCyqjEkLyVM1vdGom7Ofc7GDBWEjZbTbKhsE/2wG/6fLF5BFupU30Ckg.6m1SYHZ1
+
 
 - hosts: dev_myriad_master
-  remote_user: hduser
+  remote_user: '{{ DEPLOY_USER }}'
   sudo: yes
   roles:
     - myriad
 
 - hosts: dev_myriad_master
-  remote_user: hduser
+  remote_user: '{{ DEPLOY_USER }}'
   sudo: yes
   tasks:
-    - include: tasks/build.yml
-    - include: tasks/start-master.yml
+#    - include: tasks/build.yml
+#    - include: tasks/start-master.yml
 # transfer binary to slaves
 
 - hosts: dev_myriad_slave
-  remote_user: hduser
+  remote_user: '{{ DEPLOY_USER }}'
   sudo: yes
   tasks:
-    - include: tasks/start-slave.yml
+#    - include: tasks/start-slave.yml
