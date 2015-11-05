@@ -1,0 +1,26 @@
+---
+
+#- name: Change the config file myriad-config-default.yml
+#  shell: sed -i "s=/mesosMaster:.*/mesosMaster: {{ MESOS_MASTER }}/g" myriad-config-default.yml
+#  args:
+#    chdir: '{{ WORK_DIR }}' 
+
+- name: Build myriad
+  shell: ./gradlew build >> build_output.txt
+  args:
+    chdir: '{{ MYRIAD_HOME }}'
+
+- name: Copying JAR
+  shell: cp myriad-scheduler/build/libs/*.jar /usr/hadoop/share/hadoop/yarn/lib/
+  args:
+    chdir: '{{ MYRIAD_HOME }}'
+
+- name: Copying JAR
+  shell: cp myriad-executor/build/libs/myriad-executor-0.0.1.jar /usr/local/hadoop/share/hadoop/yarn/lib/
+  args:
+    chdir: '{{ MYRIAD_HOME }}'
+
+- name: Copying JAR
+  shell: cp myriad-scheduler/build/src/main/resources/myriad-config-default.yml /usr/local/hadoop/etc/hadoop/
+  args:
+    chdir: '{{ MYRIAD_HOME }}'

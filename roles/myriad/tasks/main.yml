@@ -10,7 +10,23 @@
    - aria2
 
 - name: Git clone repo mesos/myriad phase1 branch
-  git: repo=git://github.com/mesos/myriad.git dest=/usr/hduser/ clone=yes update=no
+  git: repo=git://github.com/mesos/myriad.git dest={{ WORK_DIR }} clone=yes update=no
 
-#Change the config file myriad-config-default.yml
+ 
+- name: Configure hadoop-env.sh
+  shell: sudo sh -c 'echo export MESOS_NATIVE_JAVA_LIBRARY=/usr/local/lib/libmesos.so >> hadoop-env.sh '
+  args:
+    chdir: /usr/local/etc/hadoop
+
+
+# etc/hadoop/yarn-site.xml
+
+
+- name: Configure mapred-site.xml
+  shell: sed -i 's=<configuration>=<configuration>\<property>\<name>mapreduce.shuffle.port</name>\<value>${myriad.mapreduce.shuffle.port}\</value>\</property>=g' mapred-site.xml
+  args:
+    chdir: /usr/local/hadoop/etc/hadoop
+
+
+
 

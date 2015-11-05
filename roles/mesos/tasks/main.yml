@@ -33,10 +33,10 @@
     chdir: ../../home/hduser/mesos-{{ MESOS_VERSION }}/build
 
 
-#- name: make
-#  shell: make >> make-output.txt
-#  args:
-#    chdir: ../../home/hduser/mesos-{{ MESOS_VERSION}}/build
+- name: make
+  shell: make >> make-output.txt
+  args:
+    chdir: ../../home/hduser/mesos-{{ MESOS_VERSION}}/build
 
 #- name: Run test suite
 #  shell: make check >> make-check-output.txt

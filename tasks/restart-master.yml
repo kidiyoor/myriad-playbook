@@ -1,0 +1,11 @@
+---
+
+- name: stop resourcemanager 
+  shell: ./yarn-daemon.sh stop resourcemanager 
+  args:
+    chdir: /usr/local/sbin
+
+- name: start resourcemanager 
+  shell: ./yarn-daemon.sh start resourcemanager 
+  args:
+    chdir: /usr/local/sbin

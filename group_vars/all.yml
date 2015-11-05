@@ -7,7 +7,18 @@ MESOS_VERSION: 0.25.0
 # Which version of Hadoop to install
 HADOOP_VERSION: 2.5.2
 
+#Check myriad and hadoop roles, restart-master.yml  /usr/local
+HADOOP_HOME: 
+
 HADOOP_INSTALL_URL: http://apache.osuosl.org/hadoop/common/hadoop-{{ HADOOP_VERSION }}/hadoop-{{ HADOOP_VERSION }}.tar.gz
+
 MESOS_INSTALL_URL: http://www.apache.org/dist/mesos/0.25.0/mesos-{{ MESOS_VERSION }}.tar.gz
 
-#MYRIAD_MASTER: IP set this dynamically
+MESOS_MASTER: 127.0.0.1:5050
+
+#Myriad git cloned here
+WORK_DIR: /home/{{ DEPLOY_USER }} 
+
+MYRIAD_HOME: '{{ WORK_DIR }}/myriad'
+
+MYRIAD_CONFIG: '{{ MYRIAD_HOME }}/myriad-scheduler/src/main/resources/myriad-config-default.yml'
