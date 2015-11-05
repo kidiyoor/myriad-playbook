@@ -1,6 +1,6 @@
 ---
 
-DEPLOY_USER: hduser
+DEPLOY_USER: ubuntu
 
 # Which version of Mesos to install
 MESOS_VERSION: 0.25.0

@@ -1,9 +1,9 @@
 ---
 
-#- name: configure Download hadoop tar
-#  get_url:
-#    url={{ HADOOP_INSTALL_URL }}
-#    dest="/home/{{ DEPLOY_USER }}/"
+- name: Download hadoop tar
+  get_url:
+    url={{ HADOOP_INSTALL_URL }}
+    dest="/home/{{ DEPLOY_USER }}/"
 
 - name: Extract Hadoop
   shell: sudo tar vxzf /home/{{ DEPLOY_USER }}/hadoop-{{ HADOOP_VERSION }}.tar.gz -C /usr/local
