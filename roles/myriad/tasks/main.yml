@@ -19,13 +19,49 @@
     chdir: /usr/local/hadoop/etc/hadoop
 
 
-# etc/hadoop/yarn-site.xml
-
+- name: Configure yarn-site.xml
+  lineinfile: dest=/usr/local/hadoop/etc/hadoop/yarn-site.xml 
+    regexp='<configuration>' line='<configuration>
+                                                           \\n\\t<property>
+                                                           \\n\\t\\t<name>yarn.nodemanager.resource.cpu-vcores</name>
+                                                           \\n\\t\\t<value>${nodemanager.resource.cpu-vcores}</value>
+                                                           \\n\\t</property>
+                                                           \\n\\t<property>
+                                                           \\n\\t\\t<name>yarn.nodemanager.resource.memory-mb</name>
+                                                           \\n\\t\\t<value>${nodemanager.resource.memory-mb}</value>
+                                                           \\n\\t</property>
+                                                           \\n<!--These options enable dynamic port assignment by mesos -->
+                                                           \\n\\t<property>
+                                                           \\n\\t\\t<name>yarn.nodemanager.address</name>
+                                                           \\n\\t\\t<value>${myriad.yarn.nodemanager.address}</value>
+                                                           \\n\\t</property>
+                                                           \\n\\t<property>
+                                                           \\n\\t\\t<name>yarn.nodemanager.webapp.address</name>
+                                                           \\n\\t\\t<value>${myriad.yarn.nodemanager.webapp.address}</value>
+                                                           \\n\\t</property>
+                                                           \\n\\t<property>
+                                                           \\n\\t\\t<name>yarn.nodemanager.webapp.https.address</name>
+                                                           \\n\\t\\t<value>${myriad.yarn.nodemanager.webapp.address}</value>
+                                                           \\n\\t</property>
+                                                           \\n\\t<property>
+                                                           \\n\\t\\t<name>yarn.nodemanager.localizer.address</name>
+                                                           \\n\\t\\t<value>${myriad.yarn.nodemanager.localizer.address}</value>
+                                                           \\n\\t</property>
+                                                           \\n<!-- Configure Myriad Scheduler here -->
+                                                           \\n\\t<property>
+                                                           \\n\\t\\t<name>yarn.resourcemanager.scheduler.class</name>
+                                                           \\n\\t\\t<value>org.apache.myriad.scheduler.yarn.MyriadFairScheduler</value>
+                                                           \\n\\t</property>'
+    state=present
+    create=True
 
 - name: Configure mapred-site.xml
-  shell: sed -i 's=<configuration>=<configuration>\<property>\<name>mapreduce.shuffle.port</name>\<value>${myriad.mapreduce.shuffle.port}\</value>\</property>=g' mapred-site.xml
-  args:
-    chdir: /usr/local/hadoop/etc/hadoop
+  lineinfile: dest=/usr/local/hadoop/etc/hadoop/mapred-site.xml 
+    regexp='<configuration>' line='<configuration>
+                                                           \\n\\t<property>
+                                                           \\n\\t\\t<name>mapreduce.shuffle.port</name>
+                                                           \\n\\t\\t<value>${myriad.mapreduce.shuffle.port}\</value>
+                                                           \\n\\t</property>'
 
 
 

@@ -119,5 +119,5 @@
   args:
     chdir: /usr/local/hadoop/etc/hadoop
 
-#- name: configure 
+#- name: Namenode format
 #  shell: sudo -u {{ DEPLOY_USER }} sh -c '/usr/local/hadoop/bin/hdfs namenode -format' 
