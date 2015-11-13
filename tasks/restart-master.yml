@@ -1,11 +1,41 @@
 ---
 
+#- name: stop namenode
+#  shell: ./hadoop-daemon.sh stop namenode
+#  args:
+#    chdir: /usr/local/hadoop/sbin
+
+#- name: start namenode
+#  shell: ./hadoop-daemon.sh start namenode
+#  args:
+#    chdir: /usr/local/hadoop/sbin
+
+#- name: stop datanode
+#  shell: ./hadoop-daemon.sh stop datanode
+#  args:
+#    chdir: /usr/local/hadoop/sbin
+
+#- name: start datanode
+#  shell: ./hadoop-daemon.sh start datanode
+#  args:
+#   chdir: /usr/local/hadoop/sbin
+
+#- name: stop jobhistory server
+#  shell: ./mr-jobhistory-daemon.sh stop historyserver
+#  args:
+#    chdir: /usr/local/hadoop/sbin
+
+#- name: start jobhistory server
+#  shell: ./mr-jobhistory-daemon.sh start historyserver
+# args:
+#   chdir: /usr/local/hadoop/sbin
+
 - name: stop resourcemanager 
   shell: ./yarn-daemon.sh stop resourcemanager 
   args:
-    chdir: /usr/local/sbin
+    chdir: /usr/local/hadoop/sbin
 
 - name: start resourcemanager 
   shell: ./yarn-daemon.sh start resourcemanager 
   args:
-    chdir: /usr/local/sbin
+    chdir: /usr/local/hadoop/sbin

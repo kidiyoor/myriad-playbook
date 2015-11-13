@@ -11,7 +11,7 @@
     chdir: '{{ MYRIAD_HOME }}'
 
 - name: Copying JAR
-  shell: cp myriad-scheduler/build/libs/*.jar /usr/hadoop/share/hadoop/yarn/lib/
+  shell: cp myriad-scheduler/build/libs/*.jar /usr/local/hadoop/share/hadoop/yarn/lib/
   args:
     chdir: '{{ MYRIAD_HOME }}'
 

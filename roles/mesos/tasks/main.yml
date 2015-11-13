@@ -22,23 +22,23 @@
     dest: "/home/{{ DEPLOY_USER }}/{{ MESOS_VERSION }}.tar.gz"
 
 - name: Exract Mesos
-  shell: cd /home/hduser && tar -zxf {{ MESOS_VERSION}}.tar.gz
+  shell: cd /home/{{ DEPLOY_USER }}&& tar -zxf {{ MESOS_VERSION}}.tar.gz
 
 - name: Create directory build
-  file: path=/home/hduser/mesos-{{ MESOS_VERSION }}/build state=directory mode=0755
+  file: path=/home/{{ DEPLOY_USER }}/mesos-{{ MESOS_VERSION }}/build state=directory mode=0755
 
-- name: Run configure to create make file
+- name: Run configure to create make file (see output here - build/configure-output.txt)
   shell: ../configure >> configure-output.txt
   args:
-    chdir: ../../home/hduser/mesos-{{ MESOS_VERSION }}/build
+    chdir: ../../home/{{ DEPLOY_USER }}/mesos-{{ MESOS_VERSION }}/build
 
 
-- name: make
-  shell: make >> make-output.txt
-  args:
-    chdir: ../../home/hduser/mesos-{{ MESOS_VERSION}}/build
+#- name: make (see output here - build/make-output.txt)
+#  shell: make >> make-output.txt
+#  args:
+#    chdir: ../../home/{{ DEPLOY_USER }}/mesos-{{ MESOS_VERSION}}/build
 
-#- name: Run test suite
+#- name: Run test suite (see output here - build/make-check-output.txt)
 #  shell: make check >> make-check-output.txt
 #  args:
-#    chdir: ../../home/hduser/mesos-{{ MESOS_VERSION}}/build
+#    chdir: ../../home/{{ DEPLOY_USER }}/mesos-{{ MESOS_VERSION}}/build

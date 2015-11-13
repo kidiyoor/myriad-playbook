@@ -47,6 +47,9 @@
 - name: update-alternatives g++
   shell: sudo update-alternatives --config g++
 
+- name: Install git
+  apt: name=git state=present
+
 - name: creating group hadoop
   group: name=hadoop state=present 
   sudo: yes
